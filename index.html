@@ -465,6 +465,15 @@
 
   // WIDS Workshop: Add Offline AppCache "updateready" event listener here
 
+	window.applicationCache.addEventListener(
+		'updateready',
+		function(e) {
+			var reload = window.confirm('confirm to update?');
+			if (reload)
+				window.location.reload();
+		},
+		false);
+
 </script>
 </head>
 <body style="background-color:#f1eeee;">
