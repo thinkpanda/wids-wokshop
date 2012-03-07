@@ -43,10 +43,33 @@
 
 /*******************Initialization Functions*****************************************/
 
+    var iDb;
+    
+    function openDatabase() {
+		var req = window.mozIndexedDB.open('store',1);
+		req.addEventListener('success', function(e) {
+			iDb = req.result || e.result;
+		});
+    }
+    
+    function saveHighScore(h) {
+    	var tx = iDb.transaction(iDb.objectStoreNames, IDBTransaction.READ_WRITE);
+    	var r = tx.objectStore("highscore");
+    	r.put({
+    		"highscore": h
+    	});
+    	r.addEventListener('success', function(e) {
+    		alert('high score saving success!');
+    	}
+    }
+
+
     //this function is called first when whole page gets loaded
     function init() {
         context = document.getElementById("canvas").getContext("2d");
         drawRect();
+        
+        openDatabase();
 
         //add the colors into a global array, so that bars can be colored
         colors.push("#eee614");
@@ -267,12 +290,13 @@
 			barSizeWidth = 80;
         }
     }
-
+    
     //this function is called when the ball touches the ground
     function gameOver() {
         // WIDS Workshop: high score is updated here. Use IndexedDB or localStorage to save it to local disk
         if (highscore < score) {
           highscore = score;
+			saveHighScore(highscore);
           document.getElementById("highscore").innerHTML = 'High Score: ' + highscore;
         }
         isGameOver = true;
