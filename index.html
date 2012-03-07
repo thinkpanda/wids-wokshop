@@ -46,13 +46,16 @@
     var iDb;
     
     function openDatabase() {
+    	alert('attempt to open db');
 		var req = window.mozIndexedDB.open('store',1);
 		req.addEventListener('success', function(e) {
 			iDb = req.result || e.result;
+			alert('open db success');
 		});
     }
     
     function saveHighScore(h) {
+    	alert('attempt to save high score');
     	var tx = iDb.transaction(iDb.objectStoreNames, IDBTransaction.READ_WRITE);
     	var r = tx.objectStore("highscore");
     	r.put({
